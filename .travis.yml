@@ -1,0 +1,43 @@
+language: node_js
+sudo: required
+node_js:
+  - '4'
+branches:
+  only:
+    - master
+    - /^v\d+(\.\d+)*$/
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.5
+    packages:
+      - libstdc++6
+script:
+  - 'git clone https://github.com/klokantech/gl-style-package-spec.git'
+  - cd gl-style-package-spec
+  - bash ./task/run.sh
+  - cd ..
+  - cp ./sprites/* gl-style-package-spec/build/
+  - cp -r ./font gl-style-package-spec/build/
+  - cp ./style.json gl-style-package-spec/build/
+  - cd gl-style-package-spec/build/
+  - sed -i 's_https://free.tilehosting.com/data/v3.json?key={key}_https://api.maptiler.com/tiles/v3/tiles.json?key=orA5vDO6s7Vhtu4MHtvm_' style.json
+  - sed -i 's/style-cdn.json/style.json/' index.html
+  - sed -i 's/mapboxgl.setRTLTextPlugin/mapboxgl.accessToken = "pk.eyJ1IjoiZnJvZHJpZ28iLCJhIjoiY2sxcng3ZDl0MDk3ZDNwbnVjdjgzMzB6YiJ9.AhY7lo2QYx_jriWS_mN0Lg"; mapboxgl.setRTLTextPlugin/' index.html
+  - git add .
+  - git commit -m "Deploy to Github Pages"
+  - git push --force --quiet "https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git" master:gh-pages > /dev/null 2>&1
+env:
+  global:
+    - secure: >-
+        BsgkyEwPVSIIjY+HxwM62tWTuN+2GkmkBQmKWV2O8XqFIGbDyLbuDxYv99DOQk3Ih7RgQ7ngmx9CWNTay6NYJx+2sxKAyWIyuI9NnMF9rBJMJv0pJ/bmIcmuV/lVBgVKPNeNR29M6QyG8CyphsI3rsYU2FsJr3DgPHGmErLQP0/Ssxtagf9lk32ylhbssNFrTYSWDkY5mc5svcom/p/cbFObRSy7CxVAUgazEX0qTAKzf5Cng7hUK2x5RD9PyUz+dcQ4JJoErgMqjlgzQJkcYkAOFh+O2uh2seXAxFNkEqn5gYyCDw4fPKKCX0jxFvHNcFVD0dUv8YDhz8DTil09euHcnO5AnqAXcOyy+vXrd+Bkm6clGvpDmDInvWiSTnGMdK6niG97iQHtRGqv4joexeSEAYzJJey2H4yIqz/IxYSO7u+rSyHaVm7Mnk7CPAQj2LvuyzZLPMjtQFyD7m8WlTaLP/LOdmH7ul1tKwHpJi2cQ6mztMo/iwb+zHKZt5LlVpeQL8kcesUxkHbGqUnZpsvqiEMSzAV5pUNu5rdDivukJeCPfAbZT7/HrFgCdS7XdIDcN6clo9Ap0+lVLkQWC1WJ2+Z2MOqNxDKe+NRqb47gYEzoKPtCgoJKUWwMqQztYRDRy10uwvjdlO2SgxRtVlmWNYlzaJvBwt87+Wf6s8E=
+deploy:
+  provider: releases
+  api_key: '${GITHUB_TOKEN}'
+  file: 'build/${TRAVIS_TAG}.zip'
+  skip_cleanup: true
+  'on':
+    tags: true
+services:
+  - docker
