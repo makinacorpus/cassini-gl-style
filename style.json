@@ -16,7 +16,7 @@
       "data": "https://raw.githubusercontent.com/makinacorpus/cassini-gl-style/gh-pages/cassini-sea.geojson"
     }
   },
-  "sprite": "https://makinacorpus.github.io/cassini-gl-style/sprites",
+  "sprite": "https://makinacorpus.github.io/cassini-gl-style/sprite",
   "glyphs": "https://makinacorpus.github.io/cassini-gl-style/font/{fontstack}/{range}.pbf?key={key}",
   "layers": [
     {

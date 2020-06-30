@@ -14,6 +14,7 @@ addons:
     packages:
       - libstdc++6
 script:
+  - mkdir icons
   - 'git clone https://github.com/klokantech/gl-style-package-spec.git'
   - cd gl-style-package-spec
   - bash ./task/run.sh
