@@ -21,6 +21,7 @@ script:
   - cp ./sprites/* gl-style-package-spec/build/
   - cp -r ./font gl-style-package-spec/build/
   - cp ./style.json gl-style-package-spec/build/
+  - cp ./textures/*.geojson gl-style-package-spec/build/
   - cd gl-style-package-spec/build/
   - sed -i 's_https://free.tilehosting.com/data/v3.json?key={key}_https://api.maptiler.com/tiles/v3/tiles.json?key=orA5vDO6s7Vhtu4MHtvm_' style.json
   - sed -i 's/style-cdn.json/style.json/' index.html
