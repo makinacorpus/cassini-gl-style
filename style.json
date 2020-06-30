@@ -10,8 +10,14 @@
       "type": "vector",
       "url": "https://free.tilehosting.com/data/v3.json?key={key}"
     },
-    "boat": {"type": "vector", "url": "mapbox://frodrigomk.d1gakzxq"},
-    "sea": {"type": "vector", "url": "mapbox://frodrigomk.08iy0uz9"}
+    "boat": {
+      "type": "geojson",
+      "data": "https://raw.githubusercontent.com/makinacorpus/cassini-gl-style/gh-pages/cassini-boat.geojson"
+    },
+    "sea": {
+      "type": "geojson",
+      "data": "https://raw.githubusercontent.com/makinacorpus/cassini-gl-style/gh-pages/cassini-sea.geojson"
+    }
   },
   "sprite": "https://makinacorpus.github.io/cassini-gl-style/sprites",
   "glyphs": "https://makinacorpus.github.io/cassini-gl-style/font/{fontstack}/{range}.pbf?key={key}",
@@ -313,7 +319,6 @@
       "id": "boat",
       "type": "symbol",
       "source": "boat",
-      "source-layer": "cassini-boat-79wg34",
       "minzoom": 5,
       "maxzoom": 9,
       "layout": {
@@ -333,7 +338,6 @@
       "id": "sea-name-low",
       "type": "symbol",
       "source": "sea",
-      "source-layer": "cassini-sea-84n8dt",
       "minzoom": 0,
       "maxzoom": 8,
       "filter": ["all", ["==", "type", "2"]],
@@ -354,7 +358,6 @@
       "id": "sea-name-hight",
       "type": "symbol",
       "source": "sea",
-      "source-layer": "cassini-sea-84n8dt",
       "minzoom": 8,
       "maxzoom": 24,
       "filter": ["all", ["==", "type", "1"]],
