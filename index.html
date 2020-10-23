@@ -15,10 +15,10 @@
 <body>
   <div id='map'></div>
   <script>
-      mapboxgl.setRTLTextPlugin('https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js');
+      mapboxgl.accessToken = "pk.eyJ1IjoiZnJvZHJpZ28iLCJhIjoiY2sxcng3ZDl0MDk3ZDNwbnVjdjgzMzB6YiJ9.AhY7lo2QYx_jriWS_mN0Lg"; mapboxgl.setRTLTextPlugin('https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js');
       var map = new mapboxgl.Map({
         container: 'map',
-        style: 'style-cdn.json',
+        style: 'style.json',
         attributionControl: true,
         hash: true
       });

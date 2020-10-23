@@ -1,0 +1,772 @@
+{
+  "version": 8,
+  "name": "Cassini",
+  "metadata": {
+    "maputnik:renderer": "mbgljs",
+    "openmaptiles:version": "3.x",
+    "openmaptiles:mapbox:source:url": "https://github.com/makinacorpus/cassini-gl-style"
+  },
+  "sources": {
+    "openmaptiles": {
+      "type": "vector",
+      "url": "https://api.maptiler.com/tiles/v3/tiles.json?key=orA5vDO6s7Vhtu4MHtvm"
+    },
+    "boat": {
+      "type": "geojson",
+      "data": "https://raw.githubusercontent.com/makinacorpus/cassini-gl-style/gh-pages/cassini-boat.geojson"
+    },
+    "sea": {
+      "type": "geojson",
+      "data": "https://raw.githubusercontent.com/makinacorpus/cassini-gl-style/gh-pages/cassini-sea.geojson"
+    }
+  },
+  "sprite": "https://makinacorpus.github.io/cassini-gl-style/sprite",
+  "glyphs": "https://makinacorpus.github.io/cassini-gl-style/font/{fontstack}/{range}.pbf?key={key}",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {"background-pattern": "background", "background-opacity": 1}
+    },
+    {
+      "id": "boundary",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "boundary",
+      "minzoom": 0,
+      "maxzoom": 24,
+      "filter": [
+        "all",
+        ["<=", "admin_level", 4],
+        ["==", "$type", "LineString"],
+        ["==", "maritime", 0]
+      ],
+      "layout": {"line-cap": "butt", "line-join": "bevel"},
+      "paint": {
+        "line-color": "#3b230b",
+        "line-width": {"base": 1.3, "stops": [[0, 2], [13, 4], [22, 6]]},
+        "line-gap-width": 0,
+        "line-opacity": 0.6,
+        "line-dasharray": [0.6, 2]
+      }
+    },
+    {
+      "id": "landcover-grass",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "landcover",
+      "minzoom": 15,
+      "maxzoom": 24,
+      "filter": ["all", ["in", "class", "grass"]],
+      "layout": {"visibility": "none"},
+      "paint": {"fill-pattern": "landuse=vineyard"}
+    },
+    {
+      "id": "landuse-building",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "landuse",
+      "minzoom": 9,
+      "maxzoom": 16,
+      "filter": [
+        "all",
+        [
+          "in",
+          "class",
+          "residential",
+          "industrial",
+          "hospital",
+          "university",
+          "college",
+          "military",
+          "school",
+          "stadium",
+          "retail",
+          "commercial",
+          "pitch",
+          "railway",
+          "cemetery"
+        ]
+      ],
+      "paint": {
+        "fill-pattern": "building2",
+        "fill-opacity": {"stops": [[11, 0], [14, 0.6], [14.5, 0]]}
+      }
+    },
+    {
+      "id": "ww-river-border",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "waterway",
+      "minzoom": 0,
+      "maxzoom": 24,
+      "filter": ["all", ["==", "$type", "LineString"]],
+      "layout": {"line-cap": "round", "line-join": "round"},
+      "paint": {
+        "line-color": "#3b230b",
+        "line-opacity": 0.8,
+        "line-width": {"base": 1.4, "stops": [[8, 4], [20, 8]]}
+      }
+    },
+    {
+      "id": "ww-lake-border",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "minzoom": 0,
+      "maxzoom": 24,
+      "filter": ["all", ["in", "class", "lake", "river"]],
+      "layout": {"line-cap": "round", "line-join": "round"},
+      "paint": {
+        "line-color": "#3b230b",
+        "line-width": {"stops": [[8, 3], [20, 5]]},
+        "line-offset": 0,
+        "line-dasharray": [1, 1],
+        "line-opacity": 0.8
+      }
+    },
+    {
+      "id": "ww-river-inner-clear",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "waterway",
+      "minzoom": 0,
+      "maxzoom": 24,
+      "filter": ["all", ["==", "$type", "LineString"]],
+      "layout": {"line-cap": "round", "line-join": "round"},
+      "paint": {
+        "line-color": "#3b230b",
+        "line-opacity": 1,
+        "line-width": {"base": 1.4, "stops": [[8, 2], [20, 5.5]]},
+        "line-pattern": "background"
+      }
+    },
+    {
+      "id": "ww-river-inner-fill",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "waterway",
+      "minzoom": 0,
+      "maxzoom": 24,
+      "filter": ["all", ["==", "$type", "LineString"]],
+      "layout": {"line-cap": "round", "line-join": "round"},
+      "paint": {
+        "line-width": {"base": 1.4, "stops": [[8, 2], [20, 5.5]]},
+        "line-pattern": "lake"
+      }
+    },
+    {
+      "id": "ww-lake-clear",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "minzoom": 0,
+      "maxzoom": 24,
+      "filter": ["all", ["in", "class", "lake", "river"]],
+      "paint": {"fill-pattern": "background"}
+    },
+    {
+      "id": "ww-lake-fill",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "minzoom": 0,
+      "maxzoom": 24,
+      "filter": ["all", ["in", "class", "lake", "river"]],
+      "paint": {"fill-pattern": "lake"}
+    },
+    {
+      "id": "ww-river-name",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "waterway",
+      "minzoom": 0,
+      "maxzoom": 24,
+      "filter": ["all", ["==", "$type", "LineString"]],
+      "layout": {
+        "visibility": "none",
+        "symbol-placement": "line",
+        "text-field": "{name}",
+        "text-size": {"stops": [[0, 0], [11, 2], [15, 14]]},
+        "text-font": ["Goudy Bookletter 1911"]
+      },
+      "paint": {
+        "text-color": "#3b230b",
+        "text-halo-color": "rgba(243,243,228,1)",
+        "text-halo-width": {"stops": [[0, 0], [11, 2], [15, 3]]}
+      }
+    },
+    {
+      "id": "ocean-z6_1",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "minzoom": 6,
+      "maxzoom": 24,
+      "filter": ["all", ["==", "class", "ocean"]],
+      "layout": {"line-cap": "round", "line-join": "round"},
+      "paint": {
+        "line-width": {"stops": [[6, 6], [8, 10]]},
+        "line-opacity": 0.8,
+        "line-color": "#3b230b"
+      }
+    },
+    {
+      "id": "ocean-z6_1c",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "minzoom": 6,
+      "maxzoom": 24,
+      "filter": ["all", ["==", "class", "ocean"]],
+      "layout": {"line-cap": "round", "line-join": "round"},
+      "paint": {
+        "line-width": {"stops": [[6, 0], [8, 4]]},
+        "line-opacity": 1,
+        "line-pattern": "background"
+      }
+    },
+    {
+      "id": "ocean-z8_2",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "minzoom": 8,
+      "maxzoom": 24,
+      "filter": ["all", ["==", "class", "ocean"]],
+      "layout": {"line-cap": "round", "line-join": "round"},
+      "paint": {
+        "line-width": 2,
+        "line-opacity": {"stops": [[0, 0], [7, 0.8]]},
+        "line-color": "#3b230b",
+        "line-dasharray": [4, 1, 3, 1]
+      }
+    },
+    {
+      "id": "ocean-c-clear",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "minzoom": 6,
+      "maxzoom": 24,
+      "filter": ["all", ["==", "class", "ocean"]],
+      "paint": {"fill-pattern": "background"}
+    },
+    {
+      "id": "ocean-z0-6_1",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "minzoom": 0,
+      "maxzoom": 6,
+      "filter": ["all", ["==", "class", "ocean"]],
+      "layout": {"line-cap": "round", "line-join": "round"},
+      "paint": {
+        "line-color": "#3b230b",
+        "line-width": 3,
+        "line-offset": -1,
+        "line-opacity": 0.8
+      }
+    },
+    {
+      "id": "ocean-z0-8_2",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "minzoom": 0,
+      "maxzoom": 8,
+      "filter": ["all", ["==", "class", "ocean"]],
+      "layout": {"line-cap": "round", "line-join": "round"},
+      "paint": {
+        "line-width": 0.5,
+        "line-offset": {"stops": [[0, 2.25], [6, 1.25], [8, -1]]},
+        "line-gap-width": 0,
+        "line-opacity": {"stops": [[0, 0], [2, 0.4], [7, 0.8]]},
+        "line-color": "#3b230b",
+        "line-dasharray": [4, 1, 3, 1]
+      }
+    },
+    {
+      "id": "boat",
+      "type": "symbol",
+      "source": "boat",
+      "minzoom": 5,
+      "maxzoom": 9,
+      "layout": {
+        "icon-image": "boat{boat}",
+        "text-size": 16,
+        "icon-size": {"stops": [[5, 0.1], [8, 1]]},
+        "text-allow-overlap": false,
+        "text-ignore-placement": false,
+        "text-optional": false,
+        "icon-allow-overlap": true,
+        "icon-rotation-alignment": "map",
+        "text-font": ["Goudy Bookletter 1911"]
+      },
+      "paint": {"icon-translate-anchor": "map"}
+    },
+    {
+      "id": "sea-name-low",
+      "type": "symbol",
+      "source": "sea",
+      "minzoom": 0,
+      "maxzoom": 8,
+      "filter": ["all", ["==", "type", "2"]],
+      "layout": {
+        "symbol-placement": "line",
+        "text-field": "{name}",
+        "text-font": ["Goudy Bookletter 1911"],
+        "text-transform": "uppercase",
+        "text-letter-spacing": 0.5
+      },
+      "paint": {
+        "text-color": "#3b230b",
+        "text-halo-color": "rgba(243,243,228,1)",
+        "text-halo-width": 2
+      }
+    },
+    {
+      "id": "sea-name-hight",
+      "type": "symbol",
+      "source": "sea",
+      "minzoom": 8,
+      "maxzoom": 24,
+      "filter": ["all", ["==", "type", "1"]],
+      "layout": {
+        "symbol-placement": "line",
+        "text-field": "{name}",
+        "text-font": ["Goudy Bookletter 1911"],
+        "text-transform": "uppercase",
+        "text-letter-spacing": 1
+      },
+      "paint": {
+        "text-color": "#3b230b",
+        "text-halo-color": "rgba(243,243,228,1)",
+        "text-halo-width": 2
+      }
+    },
+    {
+      "id": "water_name",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "water_name",
+      "minzoom": 0,
+      "maxzoom": 4,
+      "layout": {
+        "text-field": "{name:fr}",
+        "text-font": ["Goudy Bookletter 1911"],
+        "text-size": {"stops": [[10, 12], [12, 20]]},
+        "text-max-width": 4,
+        "symbol-placement": "point",
+        "text-letter-spacing": 0.2
+      },
+      "paint": {
+        "text-color": "#3b230b",
+        "text-halo-color": "rgba(243,243,228,1)",
+        "text-halo-width": 2
+      }
+    },
+    {
+      "id": "road_dash",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 9,
+      "filter": [
+        "all",
+        ["==", "$type", "LineString"],
+        ["in", "class", "trunk", "primary"]
+      ],
+      "layout": {"line-cap": "butt", "line-join": "round"},
+      "paint": {
+        "line-color": "#3b230b",
+        "line-width": 2,
+        "line-dasharray": [0.5, 1.25, 0.6, 1.1],
+        "line-opacity": 0.8,
+        "line-gap-width": 7.5
+      }
+    },
+    {
+      "id": "road",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 7,
+      "filter": [
+        "all",
+        ["==", "$type", "LineString"],
+        ["in", "class", "trunk", "primary", "secondary", "tertiary"]
+      ],
+      "layout": {"line-cap": "round", "line-join": "round"},
+      "paint": {
+        "line-color": "#3b230b",
+        "line-width": {"stops": [[7, 4], [9, 6]]},
+        "line-opacity": 0.8
+      }
+    },
+    {
+      "id": "road-brunnel",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 7,
+      "filter": [
+        "all",
+        ["==", "$type", "LineString"],
+        [
+          "in",
+          "class",
+          "trunk",
+          "primary",
+          "secondary",
+          "tertiary",
+          "minor",
+          "path"
+        ],
+        ["in", "brunnel", "bridge"]
+      ],
+      "layout": {"line-cap": "butt", "line-join": "round"},
+      "paint": {
+        "line-color": "#3b230b",
+        "line-width": {"stops": [[7, 8], [9, 10]]},
+        "line-opacity": 0.8
+      }
+    },
+    {
+      "id": "road_gap",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 7,
+      "filter": [
+        "all",
+        ["==", "$type", "LineString"],
+        [
+          "any",
+          ["in", "class", "trunk", "primary", "secondary", "tertiary"],
+          ["all", ["in", "brunnel", "bridge"], ["in", "class", "minor", "path"]]
+        ]
+      ],
+      "layout": {"line-cap": "round", "line-join": "round"},
+      "paint": {
+        "line-width": {"stops": [[7, 1], [9, 2]]},
+        "line-pattern": "background",
+        "line-opacity": 1
+      }
+    },
+    {
+      "id": "road_name",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "transportation_name",
+      "minzoom": 16,
+      "layout": {
+        "symbol-placement": "line",
+        "text-field": "{name}",
+        "text-size": {"stops": [[16, 12], [18, 16]]},
+        "text-font": ["Goudy Bookletter 1911"]
+      },
+      "paint": {
+        "text-color": "#3b230b",
+        "text-halo-color": "rgba(243,243,228,1)",
+        "text-halo-width": 6
+      }
+    },
+    {
+      "id": "building",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "building",
+      "minzoom": 14,
+      "maxzoom": 24,
+      "paint": {
+        "fill-antialias": true,
+        "fill-opacity": {"stops": [[14, 0], [15, 1]]},
+        "fill-pattern": "building2"
+      }
+    },
+    {
+      "id": "grass",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "landcover",
+      "minzoom": 14,
+      "maxzoom": 24,
+      "filter": ["all", ["==", "class", "grass"]],
+      "paint": {
+        "line-color": "#3b230b",
+        "line-width": 1.5,
+        "line-blur": 0.3,
+        "line-opacity": {"stops": [[14, 0], [15, 1]]},
+        "line-gap-width": 0,
+        "line-pattern": "building2"
+      }
+    },
+    {
+      "id": "building-outline",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "building",
+      "minzoom": 14,
+      "maxzoom": 24,
+      "layout": {},
+      "paint": {
+        "line-color": "#3b230b",
+        "line-width": 1.5,
+        "line-blur": 0.3,
+        "line-opacity": {"stops": [[14, 0], [15, 1]]}
+      }
+    },
+    {
+      "id": "building-3D-background",
+      "type": "fill-extrusion",
+      "source": "openmaptiles",
+      "source-layer": "building",
+      "minzoom": 14,
+      "maxzoom": 24,
+      "layout": {"visibility": "none"},
+      "paint": {
+        "fill-extrusion-height": {
+          "property": "render_height",
+          "type": "identity"
+        },
+        "fill-extrusion-base": {
+          "property": "render_min_height",
+          "type": "identity"
+        },
+        "fill-extrusion-pattern": "background"
+      }
+    },
+    {
+      "id": "building-3D-texture",
+      "type": "fill-extrusion",
+      "source": "openmaptiles",
+      "source-layer": "building",
+      "minzoom": 14,
+      "maxzoom": 24,
+      "layout": {"visibility": "none"},
+      "paint": {
+        "fill-extrusion-pattern": "building2",
+        "fill-extrusion-height": {
+          "property": "render_height",
+          "type": "identity"
+        },
+        "fill-extrusion-base": {
+          "property": "render_min_height",
+          "type": "identity"
+        }
+      }
+    },
+    {
+      "id": "place-hamlet_small",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 12,
+      "maxzoom": 14,
+      "filter": ["all", ["==", "$type", "Point"], ["==", "class", "hamlet"]],
+      "layout": {
+        "text-field": "{name}",
+        "text-font": ["Goudy Bookletter 1911"],
+        "text-max-width": 6,
+        "text-size": {"stops": [[12, 6], [13, 11]]},
+        "icon-image": "place_small",
+        "text-offset": [0, 1],
+        "text-letter-spacing": 0,
+        "text-transform": "uppercase",
+        "text-padding": 2,
+        "text-anchor": "top",
+        "text-line-height": 1,
+        "text-optional": true,
+        "icon-allow-overlap": true
+      },
+      "paint": {
+        "text-color": "#3b230b",
+        "text-halo-blur": 0,
+        "text-halo-color": "rgba(243,243,228,1)",
+        "text-halo-width": 6
+      }
+    },
+    {
+      "id": "place_village-std",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 11,
+      "maxzoom": 14,
+      "filter": ["all", ["==", "$type", "Point"], ["==", "class", "village"]],
+      "layout": {
+        "text-field": "{name}",
+        "text-font": ["Goudy Bookletter 1911"],
+        "text-max-width": 6,
+        "text-size": {"stops": [[11, 11], [13, 20]]},
+        "icon-image": "place",
+        "text-offset": [0, 1],
+        "text-letter-spacing": 0,
+        "text-padding": 2,
+        "text-anchor": "top",
+        "text-line-height": 1,
+        "text-optional": true,
+        "icon-allow-overlap": true
+      },
+      "paint": {
+        "text-color": "#3b230b",
+        "text-halo-blur": 0,
+        "text-halo-color": "rgba(243,243,228,1)",
+        "text-halo-width": 6
+      }
+    },
+    {
+      "id": "place_village_small",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 10,
+      "maxzoom": 11,
+      "filter": ["all", ["==", "$type", "Point"], ["==", "class", "village"]],
+      "layout": {
+        "text-field": "{name}",
+        "text-font": ["Goudy Bookletter 1911"],
+        "text-max-width": 6,
+        "text-size": {"stops": [[10, 6], [13, 11]]},
+        "icon-image": "place",
+        "text-offset": [0, 2],
+        "text-letter-spacing": 0,
+        "text-transform": "uppercase",
+        "text-padding": 2,
+        "text-anchor": "top",
+        "text-line-height": 1,
+        "text-optional": true,
+        "icon-allow-overlap": true
+      },
+      "paint": {
+        "text-color": "#3b230b",
+        "text-halo-blur": 0,
+        "text-halo-color": "rgba(243,243,228,1)",
+        "text-halo-width": 6
+      }
+    },
+    {
+      "id": "place_town_big",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 11,
+      "maxzoom": 14,
+      "filter": ["all", ["==", "$type", "Point"], ["==", "class", "town"]],
+      "layout": {
+        "text-field": "{name}",
+        "text-font": ["Goudy Bookletter 1911"],
+        "text-max-width": 6,
+        "text-size": {"stops": [[11, 15], [13, 23]]},
+        "icon-image": "place_big",
+        "text-offset": [0, 0.5],
+        "text-letter-spacing": 0.2,
+        "text-transform": "uppercase",
+        "text-padding": 2,
+        "text-anchor": "top",
+        "text-line-height": 1,
+        "icon-offset": [0, -18],
+        "text-optional": true,
+        "icon-allow-overlap": true
+      },
+      "paint": {
+        "text-color": "#3b230b",
+        "text-halo-blur": 0,
+        "text-halo-color": "rgba(243,243,228,1)",
+        "text-halo-width": 6
+      }
+    },
+    {
+      "id": "place_town_std",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 8,
+      "maxzoom": 11,
+      "filter": ["all", ["==", "$type", "Point"], ["==", "class", "town"]],
+      "layout": {
+        "text-field": "{name}",
+        "text-font": ["Goudy Bookletter 1911"],
+        "text-max-width": 6,
+        "text-size": {"stops": [[8, 11], [13, 20]]},
+        "icon-image": "place",
+        "text-offset": [0, 1],
+        "text-letter-spacing": 0,
+        "text-padding": 2,
+        "text-anchor": "top",
+        "text-line-height": 1,
+        "text-optional": true,
+        "icon-allow-overlap": true
+      },
+      "paint": {
+        "text-color": "#3b230b",
+        "text-halo-blur": 0,
+        "text-halo-color": "rgba(243,243,228,1)",
+        "text-halo-width": 6
+      }
+    },
+    {
+      "id": "place-town_small",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 7,
+      "maxzoom": 8,
+      "filter": ["all", ["==", "$type", "Point"], ["==", "class", "town"]],
+      "layout": {
+        "text-field": "{name}",
+        "text-font": ["Goudy Bookletter 1911"],
+        "text-max-width": 6,
+        "text-size": {"stops": [[7, 6], [13, 11]]},
+        "icon-image": "place_small",
+        "text-offset": [0, 1],
+        "text-letter-spacing": 0,
+        "text-padding": 2,
+        "text-anchor": "top",
+        "text-line-height": 1,
+        "text-optional": true,
+        "icon-allow-overlap": true
+      },
+      "paint": {
+        "text-color": "#3b230b",
+        "text-halo-blur": 0,
+        "text-halo-color": "rgba(243,243,228,1)",
+        "text-halo-width": 6
+      }
+    },
+    {
+      "id": "place_city_big",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 0,
+      "maxzoom": 14,
+      "filter": ["all", ["==", "$type", "Point"], ["==", "class", "city"]],
+      "layout": {
+        "text-field": "{name}",
+        "text-font": ["Goudy Bookletter 1911"],
+        "text-max-width": 6,
+        "text-size": {"stops": [[3, 10], [13, 23]]},
+        "icon-image": "place_big",
+        "text-offset": [0, 0.5],
+        "text-letter-spacing": 0.2,
+        "text-transform": "uppercase",
+        "text-padding": 2,
+        "text-anchor": "top",
+        "text-line-height": 1,
+        "icon-offset": [0, -18],
+        "icon-size": {"stops": [[3, 0.5], [7, 1]]},
+        "text-optional": true,
+        "icon-allow-overlap": true
+      },
+      "paint": {
+        "text-color": "#3b230b",
+        "text-halo-blur": 0,
+        "text-halo-color": "rgba(243,243,228,1)",
+        "text-halo-width": 6
+      }
+    }
+  ],
+  "id": "cassini"
+}
