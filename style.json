@@ -1,7 +1,11 @@
 {
   "version": 8,
   "name": "Cassini",
-  "metadata": {"maputnik:renderer": "mbgljs", "openmaptiles:version": "3.x"},
+  "metadata": {
+    "maputnik:renderer": "mbgljs",
+    "openmaptiles:version": "3.x",
+    "openmaptiles:mapbox:source:url": "https://github.com/makinacorpus/cassini-gl-style"
+  },
   "sources": {
     "openmaptiles": {
       "type": "vector",
